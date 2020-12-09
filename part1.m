@@ -90,7 +90,7 @@ title('signature 1')
 subplot(122);
 plot(ab,signature1_binaire)
 title('Binarisation de la signature 1')
-%% Trouver les extrémités
+%% Trouver les extrï¿½mitï¿½s
 
 extremites = [];
 
@@ -103,7 +103,7 @@ end
 extrem_gauche = [round(extremites(find(extremites,1,'first'),1)) round(extremites(find(extremites,1,'first'),2))];
 extrem_droite = [round(extremites(end,1)) round(extremites(end,2))];
 
-%% Création segment subdivisé en un multiple de 95 + binarisation
+%% Crï¿½ation segment subdivisï¿½ en un multiple de 95 + binarisation
 
 MA2 = extrem_gauche;
 MB2 = extrem_droite;
@@ -132,7 +132,9 @@ plot(ab2,signature2)
 title('signature 2')
 subplot(122);
 plot(ab2,signature2_binaire)
-title('signature 2 binarisé')
+title('signature 2 binarisï¿½')
 
 %% Identification des chiffres
 
+tab_B = [58, 76, 100, 94, 98, 70, 122, 110, 118, 104 ];
+tab_C = [13, 25, 19, 61, 35, 49, 47, 59, 55, 11]];
