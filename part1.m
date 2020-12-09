@@ -136,9 +136,16 @@ title('signature 2 binarisï¿½')
 
 %% Identification des chiffres
 
-ElementA = [114 102 108 66 92 78 80 68 72 116];
-ElementB = [58 76 100 94 98 70 122 110 118 104];
-ElementC = [13 25 19 61 35 49 47 59 55 11];
+%Base de donnée
+ElementA = [1 1 1 0 0 1 0 ; 1 1 0 0 1 1 0 ; 1 1 0 1 1 0 0 ; 1 0 0 0 0 1 0 ; 1 0 1 1 1 0 0 ; 1 0 0 1 1 1 0 ; 1 0 1 0 0 0 0 ; 1 0 0 0 1 0 0 ; 1 0 0 1 0 0 0 ; 1 1 1 0 1 0 0];
+ElementB = [1 0 1 1 0 0 0 ; 1 0 0 1 1 0 0 ; 1 1 0 0 1 0 0 ; 1 0 1 1 1 1 0 ; 1 1 0 0 0 1 0 ; 1 0 0 0 1 1 0 ; 1 1 1 1 0 1 0 ; 1 1 0 1 1 1 0 ; 1 1 1 0 1 1 0 ; 1 1 0 1 0 0 0];
+ElementC = [0 0 0 1 1 0 1 ; 0 0 1 1 0 0 1 ; 0 0 1 0 0 1 1 ; 0 1 1 1 1 0 1 ; 0 1 0 0 0 1 1 ; 0 1 1 0 0 0 1 ; 0 1 0 1 1 1 1 ; 0 1 1 1 0 1 1 ; 0 1 1 0 1 1 1 ; 0 0 0 1 0 1 1];
+ElementA_dup = dupTab(ElementA,u);
+ElementB_dup = dupTab(ElementB,u);
+ElementC_dup = dupTab(ElementC,u);
 
-% dec2bin(ElementA,7)
+%Segmentation Signature 2
+
+Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
+Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
 
