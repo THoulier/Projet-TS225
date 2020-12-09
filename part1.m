@@ -4,7 +4,7 @@ clc;
 
 %% Parametres
 
-img = double(imread('img/codebarre2.jpg'));
+img = double(imread('img/codebarre3.jpg'));
 
 R = img(:,:,1);
 G = img(:,:,2);
@@ -109,7 +109,8 @@ MA2 = extrem_gauche;
 MB2 = extrem_droite;
 segment(1,:)= MA2;
 
-U2 = 2*95;
+u = 2;
+U2 = u*95;
 for i = 1:U2
     segment(i,:) = MA2 + (i/(U2-1)).*(MB2-MA2);
 end 
@@ -132,3 +133,6 @@ title('signature 2')
 subplot(122);
 plot(ab2,signature2_binaire)
 title('signature 2 binarisé')
+
+%% Identification des chiffres
+
