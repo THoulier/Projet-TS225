@@ -136,3 +136,5 @@ title('signature 2 binarisé')
 
 %% Identification des chiffres
 
+ElementA = [114 102 108 66 92 78 80 68 72 116];
+dec2bin(ElementA,7)
