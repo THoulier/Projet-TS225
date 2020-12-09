@@ -4,7 +4,7 @@ clc;
 
 %% Parametres
 
-img = double(imread('img/codebarre3.jpg'));
+img = double(imread('img/codebarre2.jpg'));
 
 R = img(:,:,1);
 G = img(:,:,2);
@@ -155,10 +155,17 @@ ElementA_dup = dupTab(ElementA,u);
 ElementB_dup = dupTab(ElementB,u);
 ElementC_dup = dupTab(ElementC,u);
 
+Elements_dup = [ElementA_dup; ElementB_dup; ElementC_dup];
 %Segmentation Signature 2
 
 Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
 Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
 
-[norm, idx] = get_number(ElementA_dup,zeros(1,14));
 
+[norm, idx] = get_number(Elements_dup,zeros(1,14));
+
+tab_index = [];
+for i = 1:7*u:length(Segment1)
+    [norm, idx] = get_number(Elements_dup,Segment1(i:i+7*u-1));
+    tab_index = [tab_index idx];
+end

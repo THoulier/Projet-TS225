@@ -12,9 +12,7 @@ B = img(:,:,3);
 
 img_gray = (R+G+B)/3;
 
-
-
-%% Envoie d'un rayon
+%% Envoi d'un rayon
 
 figure(1), imshow(uint8(img));
 title('Code-barres');
@@ -36,6 +34,7 @@ Mu(1,:)= MA;
 for i = 2:U-1
     Mu(i,:) = MA + (i/(U-1)).*(MB-MA);
 end 
+
 %% Creation de la 1ere signature
 for i=1:U-1
     signature1(i,1) = img_gray(round(Mu(i,2)),round(Mu(i,1)));
@@ -46,7 +45,6 @@ S = size(Mu);
 ab = round(Mu(2,1)):(round(Mu(S(1),1))-round(Mu(2,1)))/(U-1):round(Mu(S(1),1))-(round(Mu(S(1),1))-round(Mu(2,1)))/(U-1);
 
 %% Critere d'Otsu
-
 
 histo = hist(signature1,256)
 
@@ -90,6 +88,7 @@ title('signature 1')
 subplot(122);
 plot(ab,signature1_binaire)
 title('Binarisation de la signature 1')
+
 %% Trouver les extrï¿½mitï¿½s
 
 extremites = [];
@@ -136,7 +135,19 @@ title('signature 2 binarisï¿½')
 
 %% Identification des chiffres
 
-%Base de donnée
+
+% ElementA = [114 102 108 66 92 78 80 68 72 116];
+% ElementB = [58 76 100 94 98 70 122 110 118 104];
+% ElementC = [13 25 19 61 35 49 47 59 55 11];
+
+% dec2bin(ElementA,7);
+
+%Element_A = create_table_Element_numero();%("A",1);
+% Element_B = create_table_Element_numero("B",1);
+% Element_C = create_table_Element_numero("C",1);
+
+
+%Base de donnee
 ElementA = [1 1 1 0 0 1 0 ; 1 1 0 0 1 1 0 ; 1 1 0 1 1 0 0 ; 1 0 0 0 0 1 0 ; 1 0 1 1 1 0 0 ; 1 0 0 1 1 1 0 ; 1 0 1 0 0 0 0 ; 1 0 0 0 1 0 0 ; 1 0 0 1 0 0 0 ; 1 1 1 0 1 0 0];
 ElementB = [1 0 1 1 0 0 0 ; 1 0 0 1 1 0 0 ; 1 1 0 0 1 0 0 ; 1 0 1 1 1 1 0 ; 1 1 0 0 0 1 0 ; 1 0 0 0 1 1 0 ; 1 1 1 1 0 1 0 ; 1 1 0 1 1 1 0 ; 1 1 1 0 1 1 0 ; 1 1 0 1 0 0 0];
 ElementC = [0 0 0 1 1 0 1 ; 0 0 1 1 0 0 1 ; 0 0 1 0 0 1 1 ; 0 1 1 1 1 0 1 ; 0 1 0 0 0 1 1 ; 0 1 1 0 0 0 1 ; 0 1 0 1 1 1 1 ; 0 1 1 1 0 1 1 ; 0 1 1 0 1 1 1 ; 0 0 0 1 0 1 1];
@@ -144,8 +155,13 @@ ElementA_dup = dupTab(ElementA,u);
 ElementB_dup = dupTab(ElementB,u);
 ElementC_dup = dupTab(ElementC,u);
 
+Elements_dup = [ElementA_dup; ElementB_dup; ElementC_dup];
 %Segmentation Signature 2
 
-Segment1 = signature2(u*3+1:
+Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
+Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
 
 
+[norm, idx] = get_number(Element_dup,zeros(1,14));
+
+for i = 1:
