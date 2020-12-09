@@ -136,5 +136,9 @@ title('signature 2 binaris�')
 
 %% Identification des chiffres
 
-tab_B = [58, 76, 100, 94, 98, 70, 122, 110, 118, 104 ];
-tab_C = [13, 25, 19, 61, 35, 49, 47, 59, 55, 11]];
+ElementA = [114 102 108 66 92 78 80 68 72 116];
+ElementB = [58 76 100 94 98 70 122 110 118 104];
+ElementC = [13 25 19 61 35 49 47 59 55 11];
+
+% dec2bin(ElementA,7)
+
