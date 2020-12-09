@@ -160,4 +160,5 @@ ElementC_dup = dupTab(ElementC,u);
 Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
 Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
 
+[norm, idx] = get_number(ElementA_dup,zeros(1,14));
 
