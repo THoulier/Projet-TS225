@@ -5,165 +5,108 @@ clc;
 %% Parametres
 
 img = double(imread('img/codebarre3.jpg'));
-
-R = img(:,:,1);
-G = img(:,:,2);
-B = img(:,:,3);
-
-img_gray = (R+G+B)/3;
+img_gray = get_img_gray(img);
 
 %% Envoi d'un rayon
 
 figure(1), imshow(uint8(img));
 title('Code-barres');
 
-
-[X,Y] = ginput(2);
+% choix de nb points
+nb = 2;
+[X,Y] = ginput(nb);
 line(X,Y);
-
 X = round(X);
 Y = round(Y);
 
-Dist_euclidienne = sqrt(abs(X(1)-X(2))^2+abs(Y(1)-Y(2))^2);
-U = round(2 * Dist_euclidienne);
-
+% 
+dist_euclidienne = sqrt(abs(X(1)-X(2))^2+abs(Y(1)-Y(2))^2);
+U = round(2 * dist_euclidienne);
 MA = [X(1) Y(1)];
 MB = [X(2) Y(2)];
-Mu(1,:)= MA;
+Mu = subdivision_segment(U-1, MA, MB);
 
-for i = 2:U-1
-    Mu(i,:) = MA + (i/(U-1)).*(MB-MA);
-end 
 
-%% Creation de la 1ere signature
-for i=1:U-1
-    signature1(i,1) = img_gray(round(Mu(i,2)),round(Mu(i,1)));
-end
+%% Création de la signature 1 + binarisation
 
-S = size(Mu);
-%axe des abscisse discretise
-ab = round(Mu(2,1)):(round(Mu(S(1),1))-round(Mu(2,1)))/(U-1):round(Mu(S(1),1))-(round(Mu(S(1),1))-round(Mu(2,1)))/(U-1);
+% création de la signature 1
+signature1 = creation_signature(U-1, Mu, img_gray);
 
-%% Critere d'Otsu
+% axe des abscisse discretise
+ab_disc = get_abs_disc(U-1, Mu);
 
-histo = hist(signature1,256);
-
+% critere d'Otsu
 N = 256;
-denom = sum(histo);
-w_k = [];
-mu_k = [];
+histo = hist(signature1,N);
+crit = Otsu(N, histo);
+[maxi_histo, seuil] = max(crit);
 
-for k = 0:N-1
-    S = 0;
-    S2 = 0;
-    for i = 0:k
-        S = S + histo(i+1);
-        S2 = S2 + i*histo(i+1);
-    end
-    w_k = [w_k  S/denom];
-    mu_k = [mu_k S2/denom];
-end
+% binarisation de la signature 1
+signature1_binaire = binarisation(signature1, seuil);
+
+% extrémités du segment
+[extrem_gauche, extrem_droite] = find_Extremites(U, img_gray, Mu, seuil);
 
 
-crit_k = w_k.*(mu_k(N)-mu_k).^2 + (1-w_k).*mu_k.^2;
-[a, seuil] = max(crit_k);
+%% Subdivision + création signature 2 + binarisation
 
-figure;
+% subdivision du segment
+u = 10;
+subdi = 95*u;
+seg_sub = subdivision_segment(subdi, extrem_gauche, extrem_droite);
+
+% création de la signature 2
+signature2 = creation_signature(subdi, seg_sub, img_gray);
+
+% binarisation de la signature 2
+signature2_binaire = binarisation(signature2, seuil);
+
+% axe des abscisse discretise
+ab2_disc = get_abs_disc(subdi, seg_sub);
+
+
+%% Identification des chiffres
+
+% Création de la mtrice des ElementA, ElementB et ElementC
+ElementA_dup = dupTab(BDD_ElementType("A"),u);
+ElementB_dup = dupTab(BDD_ElementType("B"),u);
+ElementC_dup = dupTab(BDD_ElementType("C"),u);
+Elements_dup = [ElementA_dup; ElementB_dup; ElementC_dup];
+
+% Segmentation de la signature 2
+Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
+Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
+
+% Identification des correspondances
+Segment_total = [Segment1 Segment2];
+tab_idx = identification_matching(u, Segment_total, Elements_dup);
+
+% Traitement du résultat
+[list_chiffres, list_classes] = index2number(tab_idx);
+
+
+%% Affichage
+
+figure(2);
 subplot(121);
 plot(histo)
 title('Histogramme signature 1');
 subplot(122);
-plot(crit_k)
-title('Critere d Otsu');
+plot(crit)
+title("Critere d'Otsu");
 
-%% Binarisation signature 1
-
-signature1_binaire(signature1 > seuil) = 1;
-signature1_binaire(signature1 <= seuil) = 0;
-
-figure;
+figure(3);
 subplot(121)
-plot(ab,signature1)
-title('signature 1')
+plot(ab_disc,signature1)
+title('Signature 1')
 subplot(122);
-plot(ab,signature1_binaire)
+plot(ab_disc,signature1_binaire)
 title('Binarisation de la signature 1')
 
-%% Trouver les extr�mit�s
-
-extremites = [];
-
-for i = 1:U-1
-    if (img_gray(round(Mu(i,2)),round(Mu(i,1))) < seuil)
-        extremites(i,:) = [Mu(i,1) Mu(i,2)];
-    end
-end
-
-extrem_gauche = [round(extremites(find(extremites,1,'first'),1)) round(extremites(find(extremites,1,'first'),2))];
-extrem_droite = [round(extremites(end,1)) round(extremites(end,2))];
-
-%% Cr�ation segment subdivis� en un multiple de 95 + binarisation
-
-MA2 = extrem_gauche;
-MB2 = extrem_droite;
-segment(1,:)= MA2;
-
-u = 5;
-U2 = u*95;
-for i = 1:U2
-    segment(i,:) = MA2 + (i/(U2-1)).*(MB2-MA2);
-end 
-
-for i=1:U2
-    signature2(i,1) = img_gray(round(segment(i,2)),round(segment(i,1)));
-end
-
-signature2_binaire(signature2 > seuil) = 1;
-signature2_binaire(signature2 <= seuil) = 0;
-
-S2 = size(segment);
-%axe des abscisse discretise
-ab2 = round(segment(2,1)):(round(segment(S2(1),1))-round(segment(2,1)))/(U2):round(segment(S2(1),1))-(round(segment(S2(1),1))-round(segment(2,1)))/(U2);
-
-figure;
+figure(4);
 subplot(121);
-plot(ab2,signature2)
-title('signature 2')
+plot(ab2_disc,signature2)
+title('Signature 2')
 subplot(122);
-plot(ab2,signature2_binaire)
-title('signature 2 binaris�')
-
-%% Identification des chiffres
-
-
-%Base de donnee
-ElementA = [1 1 1 0 0 1 0 ; 1 1 0 0 1 1 0 ; 1 1 0 1 1 0 0 ; 1 0 0 0 0 1 0 ; 1 0 1 1 1 0 0 ; 1 0 0 1 1 1 0 ; 1 0 1 0 0 0 0 ; 1 0 0 0 1 0 0 ; 1 0 0 1 0 0 0 ; 1 1 1 0 1 0 0];
-ElementB = [1 0 1 1 0 0 0 ; 1 0 0 1 1 0 0 ; 1 1 0 0 1 0 0 ; 1 0 1 1 1 1 0 ; 1 1 0 0 0 1 0 ; 1 0 0 0 1 1 0 ; 1 1 1 1 0 1 0 ; 1 1 0 1 1 1 0 ; 1 1 1 0 1 1 0 ; 1 1 0 1 0 0 0];
-ElementC = [0 0 0 1 1 0 1 ; 0 0 1 1 0 0 1 ; 0 0 1 0 0 1 1 ; 0 1 1 1 1 0 1 ; 0 1 0 0 0 1 1 ; 0 1 1 0 0 0 1 ; 0 1 0 1 1 1 1 ; 0 1 1 1 0 1 1 ; 0 1 1 0 1 1 1 ; 0 0 0 1 0 1 1];
-ElementA_dup = dupTab(ElementA,u);
-ElementB_dup = dupTab(ElementB,u);
-ElementC_dup = dupTab(ElementC,u);
-
-Elements_dup = [ElementA_dup; ElementB_dup; ElementC_dup];
-%Segmentation Signature 2
-
-Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
-Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
-
-Segment_total = [Segment1 Segment2];
-tab_norm = [];
-tab_index = [];
-
-%Identification des correspondances
-for i = 1:7*u:length(Segment_total)
-    [norm, idx] = get_number(Elements_dup,Segment_total(i:i+7*u-1));
-    tab_index = [tab_index idx];
-    tab_norm = [tab_norm norm];
-end
-
-%Traitement du r�sultat
-
-[list_chiffres, list_classes] = index2number(tab_index);
-
-
-
+plot(ab2_disc,signature2_binaire)
+title('Signature 2 binarisée')
