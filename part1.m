@@ -4,7 +4,7 @@ clc;
 
 %% Parametres
 
-img = double(imread('img/codebarre2.jpg'));
+img = double(imread('img/codebarre3.jpg'));
 
 R = img(:,:,1);
 G = img(:,:,2);
@@ -46,7 +46,7 @@ ab = round(Mu(2,1)):(round(Mu(S(1),1))-round(Mu(2,1)))/(U-1):round(Mu(S(1),1))-(
 
 %% Critere d'Otsu
 
-histo = hist(signature1,256)
+histo = hist(signature1,256);
 
 N = 256;
 denom = sum(histo);
@@ -108,7 +108,7 @@ MA2 = extrem_gauche;
 MB2 = extrem_droite;
 segment(1,:)= MA2;
 
-u = 2;
+u = 5;
 U2 = u*95;
 for i = 1:U2
     segment(i,:) = MA2 + (i/(U2-1)).*(MB2-MA2);
@@ -136,17 +136,6 @@ title('signature 2 binarisï¿½')
 %% Identification des chiffres
 
 
-% ElementA = [114 102 108 66 92 78 80 68 72 116];
-% ElementB = [58 76 100 94 98 70 122 110 118 104];
-% ElementC = [13 25 19 61 35 49 47 59 55 11];
-
-% dec2bin(ElementA,7);
-
-%Element_A = create_table_Element_numero();%("A",1);
-% Element_B = create_table_Element_numero("B",1);
-% Element_C = create_table_Element_numero("C",1);
-
-
 %Base de donnee
 ElementA = [1 1 1 0 0 1 0 ; 1 1 0 0 1 1 0 ; 1 1 0 1 1 0 0 ; 1 0 0 0 0 1 0 ; 1 0 1 1 1 0 0 ; 1 0 0 1 1 1 0 ; 1 0 1 0 0 0 0 ; 1 0 0 0 1 0 0 ; 1 0 0 1 0 0 0 ; 1 1 1 0 1 0 0];
 ElementB = [1 0 1 1 0 0 0 ; 1 0 0 1 1 0 0 ; 1 1 0 0 1 0 0 ; 1 0 1 1 1 1 0 ; 1 1 0 0 0 1 0 ; 1 0 0 0 1 1 0 ; 1 1 1 1 0 1 0 ; 1 1 0 1 1 1 0 ; 1 1 1 0 1 1 0 ; 1 1 0 1 0 0 0];
@@ -161,11 +150,20 @@ Elements_dup = [ElementA_dup; ElementB_dup; ElementC_dup];
 Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
 Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
 
-
-[norm, idx] = get_number(Elements_dup,zeros(1,14));
-
+Segment_total = [Segment1 Segment2];
+tab_norm = [];
 tab_index = [];
-for i = 1:7*u:length(Segment1)
-    [norm, idx] = get_number(Elements_dup,Segment1(i:i+7*u-1));
+
+%Identification des correspondances
+for i = 1:7*u:length(Segment_total)
+    [norm, idx] = get_number(Elements_dup,Segment_total(i:i+7*u-1));
     tab_index = [tab_index idx];
+    tab_norm = [tab_norm norm];
 end
+
+%Traitement du résultat
+
+[list_chiffres, list_classes] = index2number(tab_index);
+
+
+
