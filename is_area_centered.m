@@ -5,7 +5,8 @@ function [res] = is_area_centered(img,index_list)
 
     res = 1; % 1 si la zone est centrée sur l'image, 0 sinon
 
-    for m = 1 : len_idx
+    m = 1;
+    while (m <= len_idx && res == 1)
         for i = 1 : lines
            if (img(i,1) == index_list(m) || img(i,end) == index_list(m))
                res = 0;
@@ -16,5 +17,6 @@ function [res] = is_area_centered(img,index_list)
                res = 0;
            end
         end
+        m = m+1;
     end
 end
