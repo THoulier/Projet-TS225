@@ -4,7 +4,7 @@ clc;
 
 %% Importation
 
-addpath('AreaOfInterest','SignatureCreation','RandomRays');
+addpath('AreaOfInterest',SignatureCreation'
 
 %% Parametres
 
@@ -14,7 +14,7 @@ sigma_t = 14;
 
 %% Image d un code barre
 
-img = double(imread('BDDCodeBarre/codebarre3.jpg'));
+img = double(imread('BDDCodeBarre/codebarre2.jpg'));
 img_gray = get_img_gray(img);
 
 figure(1), imshow(uint8(img));

@@ -77,7 +77,7 @@ while (cle ~= cle_ref || chiffre1 == -1)
 
     %% Creation du 2nd segment subdi2vise en un multiple de 95 (ie 95*u) + binarisation
 
-    u = 5;
+    u = 2;
     subdi2 = 95*u;
     seg_sub2 = subdivision_segment(subdi2, extrem_gauche, extrem_droite);
 
