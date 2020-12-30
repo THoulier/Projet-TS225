@@ -33,11 +33,10 @@ imshow(D_binaire_inv_01); % 0 = noir / 1 = blanc
 
 % Calcul du nombre de zone d'interet
 [D_binaire_inv_01_bw, num] = bwlabel(D_binaire_inv_01,8);
-
+ 
 % Obtention de la zone du code-barres
-[area_label, area_label_size, is_area_centered] = get_area_of_interest(D_binaire_inv_01_bw, num);
-%[area_label, is_center,area_row,area_col,area_size] = get_area_of_interest(D_binaire_inv_01_bw, num);
-
+%[area_label, area_label_size, is_area_centered] = get_area_of_interest(D_binaire_inv_01_bw, num);
+% 
 %[x_start,y_start,width, height] = show_area_of_interest(area_row,area_col, area_size);
 
 
