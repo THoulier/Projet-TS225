@@ -1,27 +1,26 @@
-function [area_label, area_label_size, area_centered] = get_area_of_interest(img_bw, num)
-%function [area_label, is_center, area_row,area_col,area_size] = get_area_of_interest(img_bw, num)
-
-    area_index_line = [];
-    min_size_code_barres = 0; % valeur arbitraire
+function [area_label, area_label_size, area_centered, area_index] = get_area_of_interest(img_bw, num)
+    area_index = [];
+    min_size_code_barres = 0; 
     cnt = ones(1,num);
     area_label = -1;
     area_centered = -1*ones(1,num);
-    
 
     
     for i = 1 : num
-        fd = find(img_bw == i); % indices
-        cnt(i) = sum(img_bw(fd(:))./i); % compte la taille
-        area_centered(i) = is_area_centered(img_bw,fd); % si oui, alors 1, sinon 0
+        [fd_h, fd_w] = find(img_bw == i); % indices
+        %cnt(i) = sum(img_bw(fd_x(:))./i); % compte la taille
+        [h, w] = size(fd_h);
+        cnt(i) = h;
+        area_centered(i) = is_area_centered(fd_h, fd_w, img_bw); % si oui, alors 1, sinon 0
         
-        %if (area_centered(i) == 1)
+        if (area_centered(i) == 1)
             if (cnt(i) > min_size_code_barres) % on cherche la zone la + grande
                 min_size_code_barres = cnt(i);
-                area_index_line = fd;
+                area_index = [fd_h, fd_w];
                 area_label = i;
                 area_label_size = cnt(i);
             end
-        %end
+        end
         
     end
      
