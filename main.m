@@ -9,8 +9,8 @@ addpath('AreaOfInterest','SignatureCreation','RandomRays');
 %% Parametres
 
 N = 256;
-sigma_g = 2;
-sigma_t = 14;
+sigma_g = 1;
+sigma_t = 3*sigma_g;
 
 %% Image d un code barre
 
@@ -39,7 +39,7 @@ title('Code-barres (inversion noir/blanc)');
 figure, imshow(uint8(img));
 title("Code-barres (zone d'intérêt en rouge)");
 
-% Calcul du numero de la zone d'interet
+% Calcul du numero de la zone d'interet (d'où l'utilité d'inverser 0 <-> 1)
 [D_binaire_inv_01_bw, num] = bwlabel(D_binaire_inv_01,8);
  
 % Obtention de la zone du code-barres
@@ -120,8 +120,11 @@ while (cle ~= cle_ref || chiffre1 == -1)
     Elements_dup = [ElementA_dup; ElementB_dup; ElementC_dup];
 
     %Segmentation Signature 2 en deux segments de 6 chiffres
-    Segment1 = signature2_binaire(u*3+1:u*3 + 6*7*u);
-    Segment2 = signature2_binaire((7*6+3+5)*u+1:(7*6+3+5)*u + 6*7*u);
+    wi_nor = 3; % largeur de  la garde normale
+    wi_cen = 5; % largeur de la garde centrale
+    wi_num = 7; % largeur pour un chiffre
+    Segment1 = signature2_binaire(u*wi_nor+1:u*wi_nor + 6*wi_num*u);
+    Segment2 = signature2_binaire((6*wi_num+wi_nor+wi_cen)*u+1:(6*wi_num+wi_nor+wi_cen)*u + 6*wi_num*u);
 
     % Identification des correspondances
     Segment_total = [Segment1 Segment2];
@@ -146,7 +149,7 @@ while (cle ~= cle_ref || chiffre1 == -1)
         code_barres = [code_barres int2str(list_chiffres(i))];
     end
     if (cle == cle_ref)
-        sprintf('Code-barres : %s\n1er chiffre : %d\nLa clé de controle vaut : %d\nNombre d itérations : %d', code_barres, chiffre1, cle, cnt)
+        sprintf("\nCode-barres : %s\n1er chiffre : %d\nLa clé de contrôle vaut : %d\nNombre d'itérations : %d\n", code_barres, chiffre1, cle, cnt)
     end
 end
 

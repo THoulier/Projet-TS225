@@ -6,8 +6,6 @@ function [D_T_binaire] = find_area_of_interest(sigma_g, sigma_t, img)
     [X_g,Y_g] = meshgrid(range_g);
     
 	% Dérivées : horizontales (canny_X) et verticales (canny_Y)
-    %canny_x = -X_g.*exp(-(X_g.^2+Y_g.^2)/(2*sigma_g^2))/(2^pi*sigma_g^4);
-    %canny_y = -Y_g.*exp(-(X_g.^2+Y_g.^2)/(2*sigma_g^2))/(2^pi*sigma_g^4);
     canny_x = -X_g.*(1/(sqrt(2*pi)*sigma_g^3)).*exp(-(X_g.^2+Y_g.^2)/(2*sigma_g^2));
     canny_y = -Y_g.*(1/(sqrt(2*pi)*sigma_g^3)).*exp(-(X_g.^2+Y_g.^2)/(2*sigma_g^2));
     
@@ -28,7 +26,6 @@ function [D_T_binaire] = find_area_of_interest(sigma_g, sigma_t, img)
     [X_t,Y_t] = meshgrid(range_t);
     
     % Gaussienne 2D
-    %W_passe_bas = exp((-(X_t.^2+Y_t.^2))/(2*sigma_t^2))/(2*pi*sigma_t^2); 
     W_passe_bas = (1/(sqrt(2*pi)*sigma_t)).*exp((-(X_t.^2+Y_t.^2))/(2*sigma_t^2)); 
     W_passe_bas_norm = W_passe_bas/(sum(sum(W_passe_bas)));
 
@@ -57,35 +54,35 @@ function [D_T_binaire] = find_area_of_interest(sigma_g, sigma_t, img)
 
     %% Affichage
     
-%     Affichage des dérivées (CANNY)
-%     figure;
-%     subplot(121);
-%     surf(canny_x);
-%     colorbar;
-%     title("Dérivée horizontale (canny_y)");
-%     hold on
-%     subplot(122);
-%     surf(canny_y);
-%     colorbar;
-%     title("Dérivée verticale (canny_x)");
-%     
-%     Affichage des gradients (CANNY)
-%     figure;
-%     subplot(121);
-%     surf(grad_Ix_norm);
-%     colorbar;
-%     title("Gradient Ix");
-%     hold on;
-%     subplot(122);
-%     surf(grad_Iy_norm);
-%     colorbar;
-%     title("Gradient Iy");
-%     
-%     Affichage des dérivées (PASSE_BAS GAUSSIEN)
-%     figure;
-%     surf(W_passe_bas_norm);
-%     colorbar;
-%     title("Passe-bas gaussien");
+    % Affichage des dérivées (CANNY)
+    figure;
+    subplot(121);
+    surf(canny_x);
+    colorbar;
+    title("Dérivée horizontale (canny_y)");
+    hold on
+    subplot(122);
+    surf(canny_y);
+    colorbar;
+    title("Dérivée verticale (canny_x)");
+    
+    % Affichage des gradients (CANNY)
+    figure;
+    subplot(121);
+    surf(grad_Ix_norm);
+    colorbar;
+    title("Gradient Ix");
+    hold on;
+    subplot(122);
+    surf(grad_Iy_norm);
+    colorbar;
+    title("Gradient Iy");
+    
+    % Affichage des dérivées (PASSE_BAS GAUSSIEN)
+    figure;
+    surf(W_passe_bas_norm);
+    colorbar;
+    title("Passe-bas gaussien");
 
     
 end
