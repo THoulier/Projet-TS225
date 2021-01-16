@@ -3,26 +3,7 @@ function [x_start,y_start,width,height] = show_area_of_interest(area_index)
     x_start = min(area_index(:,2));
     
     % Recherche de y_start
-    y_start = 0;
-    cpt = 0;
-    cpt_ref = 0;
-    for i = 1 : lenght(area_index(:,1))-1
-        if (area_index(i,1) == area_index(i+1,1)-1)
-            cpt = cpt+1;
-            if (cpt > cpt_ref)
-                cpt_ref = cpt;
-            end
-        else
-            cpt = 0;
-        end
-    end
-%     i = 1;
-%     while (area_index(i,2) == x_start)
-%         if (area_index(i,1) > y_start)
-%             y_start = area_index(i,1);
-%         end
-%         i = i+1;
-%     end
+    y_start = min(area_index(:,1)); 
     
     % Recherche de width
     width = 0;
