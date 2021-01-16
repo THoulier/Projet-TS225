@@ -9,12 +9,12 @@ addpath('AreaOfInterest','SignatureCreation','RandomRays');
 %% Parametres
 
 N = 256;
-sigma_g = 1;
-sigma_t = 3*sigma_g;
+sigma_g = 0.5;
+sigma_t = 2*sigma_g;
 
 %% Image d un code barre
 
-img = double(imread('BDDCodeBarre/codebarre3.jpg'));
+img = double(imread('BDDCodeBarre/codebarre4.jpg'));
 img_gray = get_img_gray(img);
 
 figure(1), imshow(uint8(img));
@@ -94,7 +94,7 @@ while (cle ~= cle_ref || chiffre1 == -1)
     % obtention des extremites du segment
     [extrem_gauche, extrem_droite] = find_Extremites(subdi1, img_gray, seg_sub1, seuil);
 
-    %% Creation du 2nd segment subdi2vise en un multiple de 95 (ie 95*u) + binarisation
+    %% Creation du 2nd segment subdivise en un multiple de 95 (ie 95*u) + binarisation
 
     u = 5;
     subdi2 = 95*u;
@@ -155,22 +155,22 @@ end
 
 %% Affichage
 
-% %Signatures et histogramme (critere Otsu)
-% figure(2);
-% subplot(121);
-% plot(histo)
-% title('Histogramme signature 1');
-% subplot(122);
-% plot(crit)
-% title("Critere d'Otsu");
-% 
-% figure(3);
-% subplot(121)
-% plot(ab1,signature1)
-% title('Signature 1')
-% subplot(122);
-% plot(ab1,signature1_binaire)
-% title('Binarisation de la signature 1')
+%Signatures et histogramme (critere Otsu)
+figure(2);
+subplot(121);
+plot(histo)
+title('Histogramme signature 1');
+subplot(122);
+plot(crit)
+title("Critere d'Otsu");
+
+figure(3);
+subplot(121)
+plot(ab1,signature1)
+title('Signature 1')
+subplot(122);
+plot(ab1,signature1_binaire)
+title('Binarisation de la signature 1')
 % 
 % figure(4);
 % subplot(121);
