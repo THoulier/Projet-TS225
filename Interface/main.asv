@@ -37,35 +37,27 @@ D_binaire_inv_01 = inv_01(D_binaire);
 figure;
 subplot(1,2,1)
 imshow(D_binaire); % 0 = noir / 1 = blanc
-title("Régions d'intérêt des plus probables (en noir)");
+title("En noir");
 hold on
 subplot(1,2,2)
 imshow(D_binaire_inv_01); % 0 = noir / 1 = blanc
-title("Régions d'intérêt des plus probables (en blanc)");
+title("En blanc (inversion 0 <-> 1)");
 
 % Calcul du numero de la zone d'interet (d'où l'utilité d'inverser 0 <-> 1)
 [D_binaire_inv_01_bw, num] = bwlabel(D_binaire_inv_01,8);
  
 % Obtention de la zone du code-barres
 [area_label, area_label_size, is_area_centered, area_index] = get_area_of_interest(D_binaire_inv_01_bw, num);
-
-
-% Zone d'interet
-area01 = D_binaire_inv_01_bw;
-area01(D_binaire_inv_01_bw ~= area_label) = 0;
-
-figure, 
-subplot(121), imshow(area01);
+area_01(D_binaire_inv_01_bw ~= area_label) = 0;
+figure, imshow(uint8(area_01));
 title("Zone d'intérêt (en blanc) présentant la plus grande probabilité");
-subplot(122), imshow(uint8(img));
-[x_start,y_start,width,height] = show_area_of_interest(area_index);
-title("Zone d'intérêt (en rouge) présentant la plus grande probabilité");
 
+% Zone rouge sur la zone d'interet
+figure, imshow(uint8(img));
+title("Zone d'intérêt (en rouge) présentant la plus grande probabilité");
+[x_start,y_start,width,height] = show_area_of_interest(area_index);
 
 % Area
-figure, imshow(uint8(img));
-title("Lancers de rayons aléatoires");
-[x_start,y_start,width,height] = show_area_of_interest(area_index);
 area = [x_start x_start+width; y_start y_start+height]; % area = [x_min x_max; y_min y_max]
 
 cle = -1;

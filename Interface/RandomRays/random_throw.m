@@ -9,11 +9,11 @@ function [X,Y] = random_throw(area_of_interest)
     y_moy = round((y_min+y_max)/2);
     
     % choix de 2 points aleatoires
-    X(1) = x_min;
-    X(2) = x_max;
-%     X(1) = randi([x_min, x_moy],1);
-%     X(2) = randi([x_moy, x_max],1);
-    Y(1) = randi([y_min, y_moy],1);
+%     X(1) = x_min;
+%     X(2) = x_max;
+    X(1) = randi([x_min, x_moy],1);
+    X(2) = randi([x_moy, x_max],1);
+    Y(1) = randi([y_min, y_max],1);
     Y(2) = randi([y_min, y_max],1);
 
 end

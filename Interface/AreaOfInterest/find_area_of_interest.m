@@ -55,34 +55,34 @@ function [D_T_binaire] = find_area_of_interest(sigma_g, sigma_t, img)
     %% Affichage
     
     % Affichage des dérivées (CANNY)
-    figure;
-    subplot(121);
-    surf(canny_x);
-    colorbar;
-    title("Dérivée horizontale (canny_y)");
-    hold on
-    subplot(122);
-    surf(canny_y);
-    colorbar;
-    title("Dérivée verticale (canny_x)");
-    
-    % Affichage des gradients (CANNY)
-    figure;
-    subplot(121);
-    surf(grad_Ix_norm);
-    colorbar;
-    title("Gradient Ix");
-    hold on;
-    subplot(122);
-    surf(grad_Iy_norm);
-    colorbar;
-    title("Gradient Iy");
-    
-    % Affichage des dérivées (PASSE_BAS GAUSSIEN)
-    figure;
-    surf(W_passe_bas_norm);
-    colorbar;
-    title("Passe-bas gaussien");
+%     figure;
+%     subplot(121);
+%     surf(canny_x);
+%     colorbar;
+%     title("Dérivée horizontale (canny_y)");
+%     hold on
+%     subplot(122);
+%     surf(canny_y);
+%     colorbar;
+%     title("Dérivée verticale (canny_x)");
+%     
+%     % Affichage des gradients (CANNY)
+%     figure;
+%     subplot(121);
+%     surf(grad_Ix_norm);
+%     colorbar;
+%     title("Gradient Ix");
+%     hold on;
+%     subplot(122);
+%     surf(grad_Iy_norm);
+%     colorbar;
+%     title("Gradient Iy");
+%     
+%     % Affichage des dérivées (PASSE_BAS GAUSSIEN)
+%     figure;
+%     surf(W_passe_bas_norm);
+%     colorbar;
+%     title("Passe-bas gaussien");
 
     
 end

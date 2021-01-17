@@ -26,7 +26,6 @@ function [x_start,y_start,width,height] = show_area_of_interest(area_index)
             cnt = 0;
         end
     end
-    
     rectangle('Position',[x_start, y_start, width, height],'Curvature',0.3,'EdgeColor','r','LineWidth',3);
     
 end

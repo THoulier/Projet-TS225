@@ -10,7 +10,7 @@ addpath('AreaOfInterest','SignatureCreation','RandomRays');
 
 N = 256;
 sigma_g = 1;
-sigma_t = 3*sigma_g;
+sigma_t = 2*sigma_g;
 
 %% Image d un code barre
 
@@ -34,10 +34,14 @@ D_binaire = find_area_of_interest(sigma_g, sigma_t, img_gray);
 D_binaire_inv_01 = inv_01(D_binaire);
 
 % Affichage de la zone d'interet
-figure, imshow(D_binaire_inv_01); % 0 = noir / 1 = blanc
-title('Code-barres (inversion noir/blanc)');
-figure, imshow(uint8(img));
-title("Code-barres (zone d'intérêt en rouge)");
+figure;
+subplot(1,2,1)
+imshow(D_binaire); % 0 = noir / 1 = blanc
+title("Régions d'intérêt des plus probables (en noir)");
+hold on
+subplot(1,2,2)
+imshow(D_binaire_inv_01); % 0 = noir / 1 = blanc
+title("Régions d'intérêt des plus probables (en blanc)");
 
 % Calcul du numero de la zone d'interet (d'où l'utilité d'inverser 0 <-> 1)
 [D_binaire_inv_01_bw, num] = bwlabel(D_binaire_inv_01,8);
@@ -45,10 +49,23 @@ title("Code-barres (zone d'intérêt en rouge)");
 % Obtention de la zone du code-barres
 [area_label, area_label_size, is_area_centered, area_index] = get_area_of_interest(D_binaire_inv_01_bw, num);
 
-% Zone rouge sur la zone d'interet
+
+% Zone d'interet
+area01 = D_binaire_inv_01_bw;
+area01(D_binaire_inv_01_bw ~= area_label) = 0;
+
+figure, 
+subplot(121), imshow(area01);
+title("Zone d'intérêt (en blanc) présentant la plus grande probabilité");
+subplot(122), imshow(uint8(img));
 [x_start,y_start,width,height] = show_area_of_interest(area_index);
+title("Zone d'intérêt (en rouge) présentant la plus grande probabilité");
+
 
 % Area
+figure, imshow(uint8(img));
+title("Lancers de rayons aléatoires");
+[x_start,y_start,width,height] = show_area_of_interest(area_index);
 area = [x_start x_start+width; y_start y_start+height]; % area = [x_min x_max; y_min y_max]
 
 cle = -1;
@@ -94,7 +111,7 @@ while (cle ~= cle_ref || chiffre1 == -1)
     % obtention des extremites du segment
     [extrem_gauche, extrem_droite] = find_Extremites(subdi1, img_gray, seg_sub1, seuil);
 
-    %% Creation du 2nd segment subdi2vise en un multiple de 95 (ie 95*u) + binarisation
+    %% Creation du 2nd segment subdivise en un multiple de 95 (ie 95*u) + binarisation
 
     u = 5;
     subdi2 = 95*u;
@@ -155,22 +172,22 @@ end
 
 %% Affichage
 
-% %Signatures et histogramme (critere Otsu)
-% figure(2);
-% subplot(121);
-% plot(histo)
-% title('Histogramme signature 1');
-% subplot(122);
-% plot(crit)
-% title("Critere d'Otsu");
-% 
-% figure(3);
-% subplot(121)
-% plot(ab1,signature1)
-% title('Signature 1')
-% subplot(122);
-% plot(ab1,signature1_binaire)
-% title('Binarisation de la signature 1')
+%Signatures et histogramme (critere Otsu)
+figure(2);
+subplot(121);
+plot(histo)
+title('Histogramme signature 1');
+subplot(122);
+plot(crit)
+title("Critere d'Otsu");
+
+figure(3);
+subplot(121)
+plot(ab1,signature1)
+title('Signature 1')
+subplot(122);
+plot(ab1,signature1_binaire)
+title('Binarisation de la signature 1')
 % 
 % figure(4);
 % subplot(121);
