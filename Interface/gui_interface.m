@@ -22,7 +22,7 @@ function varargout = gui_interface(varargin)
 
 % Edit the above text to modify the response to help gui_interface
 
-% Last Modified by GUIDE v2.5 18-Jan-2021 00:28:06
+% Last Modified by GUIDE v2.5 18-Jan-2021 01:20:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,6 +59,20 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+% Initialization
+img = double(imread('codebarre3.jpg'));
+axes(handles.axes1);
+imshow(uint8(img));
+
+interro = double(imread('interrogation.png'));
+axes(handles.axes2);
+imshow(uint8(interro));
+
+reset = double(imread('reset.png'));
+axes(handles.axes7);
+imshow(uint8(reset));
+set(handles.pushbutton2,'visible','off');
+
 % UIWAIT makes gui_interface wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -82,12 +96,18 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 switch(get(eventdata.NewValue,'Tag'))
     case 'radiobutton1'
         a = get(handles.radiobutton1,'string');
-        set(handles.edit1,'string',a);
     case 'radiobutton2'
         a = get(handles.radiobutton2,'string');
-        set(handles.edit1,'string',a);
 end
 
+set(handles.barcode,'string',"0 000000 000000");
+set(handles.iterations,'string',"0");
+
+set(handles.final_word,'string',"");
+
+interro = double(imread('interrogation.png'));
+axes(handles.axes2);
+imshow(uint8(interro));
 
 
 function edit1_Callback(hObject, eventdata, handles)
@@ -143,6 +163,7 @@ else
     img = double(imread('codebarre7.jpg'));
     sigma_g = sigma_g_tab(3);
 end
+
 axes(handles.axes1);
 imshow(uint8(img));
 
@@ -364,6 +385,20 @@ switch(get(eventdata.NewValue,'Tag'))
 end
 axes(handles.axes1);
 imshow(uint8(img_to_show));
+
+set(handles.barcode,'string',"0 000000 000000");
+set(handles.iterations,'string',"0");
+
+
+% --- Executes on button press in pushbutton2.
+function pushbutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.barcode,'string',"0 000000 000000");
+set(handles.iterations,'string',"0");
+
+set(handles.final_word,'string',"");
 
 interro = double(imread('interrogation.png'));
 axes(handles.axes2);
